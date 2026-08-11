@@ -3,701 +3,821 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M/S Pathan Motors - Sales & Purchase ERP</title>
-    <!-- Tailwind CSS -->
+    <title>M/S Pathan Motors - Sales & Purchase Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f6ff',
-                            100: '#e0edff',
-                            500: '#2563eb',
-                            600: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#0f172a'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tab-page {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .tab-page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Toast notification styling */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            animation: slideIn 0.3s ease-out forwards;
+            min-width: 280px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
+<body class="min-h-screen p-4 md:p-8">
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <!-- Toast Notification Container -->
-        <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+<div id="toast-container"></div>
 
-        <!-- Header Banner -->
-        <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 text-white shadow-2xl mb-6 border border-slate-800 relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-                <div class="flex items-center gap-5">
-                    <div class="bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/20 flex-shrink-0 transform hover:scale-105 transition-transform duration-300">
-                        <img src="https://pathanmotors.com/wp-content/uploads/2018/10/cropped-logo-3-1.png" 
-                             alt="Pathan Motors Logo" 
-                             class="h-14 w-auto object-contain"
-                             onerror="this.onerror=null; this.src='https://placehold.co/150x60/1e3a8a/ffffff?text=Pathan+Motors';">
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-sm">M/S Pathan Motors</h1>
-                        </div>
-                        <p class="text-slate-300 text-sm mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-medium">
-                            <span>⚲ 38/A Borobazar Road, Mymensingh</span>
-                            <span class="text-slate-600">•</span>
-                            <span>☎ +880 1334-765576</span>
-                            <span class="text-slate-600">🌐︎</span>
-                            <a href="https://www.pathanmotors.com" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline transition-colors">www.pathanmotors.com</a>
-                        </p>
-                    </div>
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Header Banner -->
+    <header class="glass-card rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+        <div class="absolute -right-12 -top-12 w-60 h-60 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div class="flex items-center gap-5">
+                <div class="bg-white p-2.5 rounded-xl shadow-md border border-slate-200/20 shrink-0">
+                    <img src="https://pathanmotors.com/wp-content/uploads/2018/10/cropped-logo-3-1.png" 
+                         alt="M/S Pathan Motors Logo" 
+                         class="h-12 w-auto object-contain"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/150x50?text=Pathan+Motors'">
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+                        M/S Pathan Motors
+                    </h1>
+                    <p class="text-xs md:text-sm text-slate-400 mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                        <span>📍 38/A Borobazar Road, Mymensingh</span>
+                        <span>📞 +880 1334-765576</span>
+                        <span>🌐 <a href="https://www.pathanmotors.com" target="_blank" class="hover:underline text-blue-400">www.pathanmotors.com</a></span>
+                    </p>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <!-- Navigation Tabs -->
-        <nav class="bg-white/80 backdrop-blur-md rounded-2xl p-2 shadow-sm border border-slate-200/80 mb-6 flex flex-col sm:flex-row gap-1.5">
-            <button class="nav-btn active flex-1 py-3 px-5 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 bg-brand-600 text-white shadow-md shadow-brand-500/20"
-                    onclick="switchTab('sales-page', this)">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"></path></svg>
-                Sales Terminal
-            </button>
-            <button class="nav-btn flex-1 py-3 px-5 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100/80"
-                    onclick="switchTab('requisition-page', this)">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                Purchase Requisition
-                <span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-extrabold ml-1 hidden shadow-sm animate-pulse" id="shortlist-badge">0</span>
-            </button>
-            <button class="nav-btn flex-1 py-3 px-5 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100/80"
-                    onclick="switchTab('po-page', this)">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                Purchase Orders
-                <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-extrabold ml-1 hidden shadow-sm" id="po-badge">0</span>
-            </button>
-        </nav>
+    <!-- Navigation Tabs -->
+    <nav class="glass-card p-2 rounded-xl flex gap-2 overflow-x-auto shadow-lg">
+        <button id="btn-sales" onclick="switchTab('sales-page', this)" class="nav-btn flex-1 min-w-[140px] py-3 px-5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-blue-600 text-white shadow-md shadow-blue-600/30">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+            Sales Terminal
+        </button>
+        <button id="btn-requisition" onclick="switchTab('requisition-page', this)" class="nav-btn flex-1 min-w-[140px] py-3 px-5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-800/60">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Purchase Requisition
+            <span id="shortlist-badge" class="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2 py-0.5 rounded-full font-extrabold hidden">0</span>
+        </button>
+        <button id="btn-po" onclick="switchTab('po-page', this)" class="nav-btn flex-1 min-w-[140px] py-3 px-5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-800/60">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            Purchase Orders
+            <span id="po-badge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs px-2 py-0.5 rounded-full font-extrabold hidden">0</span>
+        </button>
+    </nav>
 
-        <!-- TAB 1: SALES PAGE -->
-        <main id="sales-page" class="tab-page">
-            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <span>Inventory Sales Terminal</span>
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Selling items automatically updates stock levels and triggers reorder shortlisting below 30% capacity.</p>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider border-b border-slate-200">
-                                <th class="p-4">Item Name</th>
-                                <th class="p-4">Current Stock</th>
-                                <th class="p-4">Quantity to Sell</th>
-                                <th class="p-4 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="sales-table-body" class="divide-y divide-slate-100">
-                            <!-- Dynamic Content -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-
-        <!-- TAB 2: PURCHASE REQUISITION PAGE -->
-        <main id="requisition-page" class="tab-page hidden space-y-6">
-            <!-- Section 1: Auto Shortlist -->
-            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <span>1. Auto-Requisition Shortlist</span>
-                            <span class="text-xs bg-red-100 text-red-700 px-2.5 py-1 rounded-full font-semibold">Stock ≤ 30%</span>
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Items automatically populated when inventory drops to 30% or lower (≤ 3 pcs).</p>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider border-b border-slate-200">
-                                <th class="p-4">Item Name</th>
-                                <th class="p-4">Current Stock</th>
-                                <th class="p-4">Last 2 Months Sales</th>
-                                <th class="p-4">Required Quantity</th>
-                                <th class="p-4 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="shortlist-table-body" class="divide-y divide-slate-100">
-                            <!-- Dynamic Content -->
-                        </tbody>
-                    </table>
+    <!-- TAB 1: SALES TERMINAL -->
+    <main id="sales-page" class="tab-page active">
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-700/60">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        Inventory Sales Terminal
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Selling items reduces live stock. Items hitting ≤30% stock auto-generate shortlists for Requisition.</p>
                 </div>
             </div>
 
-            <!-- Section 2: Requisition List -->
-            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-900">2. Active Requisition List</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Edit requested quantities before pushing to Purchase Order processing.</p>
-                    </div>
-                    <button class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200 flex items-center gap-2 self-start sm:self-auto" 
-                            onclick="proceedToPO()">
-                        <span>Proceed to Purchase Order</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-800/80 text-xs uppercase tracking-wider text-slate-400 font-semibold border-b border-slate-700">
+                        <tr>
+                            <th class="py-3.5 px-4 rounded-l-lg">Item Description</th>
+                            <th class="py-3.5 px-4 text-center">Available Stock</th>
+                            <th class="py-3.5 px-4">Sales Quantity</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-lg">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-table-body" class="divide-y divide-slate-800/60 font-medium">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- TAB 2: PURCHASE REQUISITION -->
+    <main id="requisition-page" class="tab-page space-y-6">
+
+        <!-- NEW: Manual Item Requisition Entry Section -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl border-l-4 border-blue-500">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Manual Requisition Entry
+                    </h2>
+                    <p class="text-xs text-slate-400">Add any product manually to the Requisition List even if it is not currently shortlisted.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                <div class="md:col-span-6">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Select Product</label>
+                    <select id="manual-item-select" class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                        <!-- Dynamic Options -->
+                    </select>
+                </div>
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Quantity</label>
+                    <input type="number" id="manual-item-qty" min="1" placeholder="Enter Qty" 
+                           class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+                           onkeydown="if(event.key === 'Enter') addManualToRequisition()">
+                </div>
+                <div class="md:col-span-3">
+                    <button onclick="addManualToRequisition()" class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-lg text-sm shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add to Requisition
                     </button>
                 </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider border-b border-slate-200">
-                                <th class="p-4">Item Name</th>
-                                <th class="p-4">Requested Qty (Editable)</th>
-                                <th class="p-4">Status</th>
-                                <th class="p-4 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="requisition-table-body" class="divide-y divide-slate-100">
-                            <!-- Dynamic Content -->
-                        </tbody>
-                    </table>
-                </div>
             </div>
-        </main>
+        </div>
 
-        <!-- TAB 3: PURCHASE ORDER PAGE -->
-        <main id="po-page" class="tab-page hidden space-y-6">
-            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-900">Purchase Order Processing</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Select or enter suppliers to auto-fill unit history and calculate total order cost.</p>
-                    </div>
-                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200 flex items-center gap-2 self-start sm:self-auto"
-                            onclick="generateGroupedPO()">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>Generate Supplier POs</span>
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider border-b border-slate-200">
-                                <th class="p-4">Item Name</th>
-                                <th class="p-4">Requisition Qty</th>
-                                <th class="p-4">Select / Type Supplier</th>
-                                <th class="p-4">Last Purchase Price</th>
-                                <th class="p-4">Current Unit Price (৳)</th>
-                                <th class="p-4 text-right">Total Price (৳)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="po-table-body" class="divide-y divide-slate-100">
-                            <!-- Dynamic Content -->
-                        </tbody>
-                    </table>
+        <!-- Section 1: Auto Shortlist -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-700/60">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        1. Automated Requisition Shortlist
+                    </h2>
+                    <p class="text-xs text-slate-400">Triggered automatically when stock drops to 30% or below.</p>
                 </div>
             </div>
 
-            <!-- Grouped PO Summary Card View -->
-            <div id="grouped-po-section" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hidden space-y-6">
-                <div class="border-b border-slate-100 pb-4">
-                    <h2 class="text-lg font-bold text-slate-900">Supplier-wise Purchase Order Summary</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Official grouped PO breakdowns for each supplier.</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-800/80 text-xs uppercase tracking-wider text-slate-400 font-semibold border-b border-slate-700">
+                        <tr>
+                            <th class="py-3.5 px-4 rounded-l-lg">Item Name</th>
+                            <th class="py-3.5 px-4 text-center">Current Stock</th>
+                            <th class="py-3.5 px-4 text-center">Last 2 Months Sales</th>
+                            <th class="py-3.5 px-4">Required Quantity</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-lg">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shortlist-table-body" class="divide-y divide-slate-800/60 font-medium">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2: Final Requisition List -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-700/60">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        2. Active Requisition Queue
+                    </h2>
+                    <p class="text-xs text-slate-400">Review and adjust required quantities before dispatching to Purchase Order stage.</p>
                 </div>
-                <div id="grouped-po-container" class="space-y-6">
-                    <!-- Dynamic Grouped Cards -->
+                <button onclick="proceedToPO()" class="bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-lg text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 shrink-0">
+                    Proceed to Purchase Order
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-800/80 text-xs uppercase tracking-wider text-slate-400 font-semibold border-b border-slate-700">
+                        <tr>
+                            <th class="py-3.5 px-4 rounded-l-lg">Item Name</th>
+                            <th class="py-3.5 px-4">Approved Requisition Qty</th>
+                            <th class="py-3.5 px-4 text-center">Status</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-lg">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requisition-table-body" class="divide-y divide-slate-800/60 font-medium">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- TAB 3: PURCHASE ORDER -->
+    <main id="po-page" class="tab-page space-y-6">
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-700/60">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        Purchase Order Processing
+                    </h2>
+                    <p class="text-xs text-slate-400">Match items with vendors, set unit purchase prices, and generate grouped orders.</p>
+                </div>
+                <button onclick="generateGroupedPO()" class="bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg text-sm shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Generate Supplier-Wise PO
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-800/80 text-xs uppercase tracking-wider text-slate-400 font-semibold border-b border-slate-700">
+                        <tr>
+                            <th class="py-3.5 px-4 rounded-l-lg">Item Name</th>
+                            <th class="py-3.5 px-4 text-center">Order Qty</th>
+                            <th class="py-3.5 px-4">Vendor Selection</th>
+                            <th class="py-3.5 px-4 text-center">Last Purchase Price</th>
+                            <th class="py-3.5 px-4">New Purchase Price ($)</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-lg">Subtotal ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="po-table-body" class="divide-y divide-slate-800/60 font-medium">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Supplier-Wise Final Output View -->
+        <div id="grouped-po-section" class="glass-card rounded-2xl p-6 shadow-2xl space-y-6 hidden border-t-4 border-emerald-500">
+            <div class="border-b border-slate-700/60 pb-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        Official Supplier Purchase Orders Summary
+                    </h2>
+                    <p class="text-xs text-slate-400">Segmented by vendor for final procurement dispatch.</p>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <script>
-        // Master Data Definitions
-        const initialItems = [
-            { id: 1, name: "Item - 1", stock: 10, initialStock: 10, salesLast2Months: 15 },
-            { id: 2, name: "Item - 2", stock: 10, initialStock: 10, salesLast2Months: 8 },
-            { id: 3, name: "Item - 3", stock: 10, initialStock: 10, salesLast2Months: 12 },
-            { id: 4, name: "Item - 4", stock: 10, initialStock: 10, salesLast2Months: 5 },
-            { id: 5, name: "Item - 5", stock: 10, initialStock: 10, salesLast2Months: 10 },
-            { id: 6, name: "Item - 6", stock: 10, initialStock: 10, salesLast2Months: 6 },
-            { id: 7, name: "Item - 7", stock: 10, initialStock: 10, salesLast2Months: 14 },
-            { id: 8, name: "Item - 8", stock: 10, initialStock: 10, salesLast2Months: 9 },
-            { id: 9, name: "Item - 9", stock: 10, initialStock: 10, salesLast2Months: 11 },
-            { id: 10, name: "Item - 10", stock: 10, initialStock: 10, salesLast2Months: 7 }
-        ];
+            <div id="grouped-po-container" class="space-y-6">
+                <!-- Dynamic Grouped PO Tables -->
+            </div>
+        </div>
+    </main>
 
-        // Specific Supplier Mappings and Random Purchase Unit Prices assigned
-        const supplierHistory = {
-            "Item - 1": [
-                { supplier: "Supplier - 1", lastPrice: 120 },
-                { supplier: "Supplier - 2", lastPrice: 118 }
-            ],
-            "Item - 2": [
-                { supplier: "Supplier - 1", lastPrice: 200 }
-            ],
-            "Item - 3": [
-                { supplier: "Supplier - 1", lastPrice: 150 },
-                { supplier: "Supplier - 3", lastPrice: 152 },
-                { supplier: "Supplier - 4", lastPrice: 148 }
-            ],
-            "Item - 4": [
-                { supplier: "Supplier - 2", lastPrice: 310 }
-            ],
-            "Item - 5": [
-                { supplier: "Supplier - 3", lastPrice: 250 }
-            ],
-            "Item - 6": [
-                { supplier: "Supplier - 3", lastPrice: 180 }
-            ],
-            "Item - 7": [
-                { supplier: "Supplier - 4", lastPrice: 225 }
-            ],
-            "Item - 8": [
-                { supplier: "Supplier - 5", lastPrice: 320 }
-            ],
-            "Item - 9": [
-                { supplier: "Supplier - 5", lastPrice: 410 }
-            ],
-            "Item - 10": [
-                { supplier: "Supplier - 5", lastPrice: 155 }
-            ]
-        };
+</div>
 
-        // Application State
-        let items = [...initialItems];
-        let requisitionList = [];
-        let poList = [];
+<script>
+    // Master Inventory State (Items 1 to 10 starting at 10 pcs)
+    const initialItems = [
+        { id: 1, name: "Item - 1", stock: 10, initialStock: 10, salesLast2Months: 15 },
+        { id: 2, name: "Item - 2", stock: 10, initialStock: 10, salesLast2Months: 8 },
+        { id: 3, name: "Item - 3", stock: 10, initialStock: 10, salesLast2Months: 12 },
+        { id: 4, name: "Item - 4", stock: 10, initialStock: 10, salesLast2Months: 5 },
+        { id: 5, name: "Item - 5", stock: 10, initialStock: 10, salesLast2Months: 10 },
+        { id: 6, name: "Item - 6", stock: 10, initialStock: 10, salesLast2Months: 6 },
+        { id: 7, name: "Item - 7", stock: 10, initialStock: 10, salesLast2Months: 14 },
+        { id: 8, name: "Item - 8", stock: 10, initialStock: 10, salesLast2Months: 9 },
+        { id: 9, name: "Item - 9", stock: 10, initialStock: 10, salesLast2Months: 11 },
+        { id: 10, name: "Item - 10", stock: 10, initialStock: 10, salesLast2Months: 7 }
+    ];
 
-        document.addEventListener("DOMContentLoaded", () => {
-            renderSalesTable();
-            updateShortlist();
+    // Supplier mappings with preset purchase history & prices
+    const supplierHistory = {
+        "Item - 1": [
+            { supplier: "Supplier - 1", lastPrice: 120 },
+            { supplier: "Supplier - 2", lastPrice: 118 }
+        ],
+        "Item - 2": [
+            { supplier: "Supplier - 1", lastPrice: 200 }
+        ],
+        "Item - 3": [
+            { supplier: "Supplier - 1", lastPrice: 150 },
+            { supplier: "Supplier - 3", lastPrice: 152 },
+            { supplier: "Supplier - 4", lastPrice: 148 }
+        ],
+        "Item - 4": [
+            { supplier: "Supplier - 2", lastPrice: 300 }
+        ],
+        "Item - 5": [
+            { supplier: "Supplier - 3", lastPrice: 250 }
+        ],
+        "Item - 6": [
+            { supplier: "Supplier - 3", lastPrice: 180 }
+        ],
+        "Item - 7": [
+            { supplier: "Supplier - 4", lastPrice: 220 }
+        ],
+        "Item - 8": [
+            { supplier: "Supplier - 5", lastPrice: 310 }
+        ],
+        "Item - 9": [
+            { supplier: "Supplier - 5", lastPrice: 400 }
+        ],
+        "Item - 10": [
+            { supplier: "Supplier - 5", lastPrice: 150 }
+        ]
+    };
+
+    let items = JSON.parse(JSON.stringify(initialItems));
+    let requisitionList = [];
+    let poList = [];
+
+    // Toast Notification Utility
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        
+        let bgClass = "bg-slate-800 border-slate-700 text-white";
+        if (type === 'success') bgClass = "bg-emerald-900/90 border-emerald-500 text-emerald-100";
+        if (type === 'warning') bgClass = "bg-amber-900/90 border-amber-500 text-amber-100";
+        if (type === 'danger') bgClass = "bg-rose-900/90 border-rose-500 text-rose-100";
+
+        toast.className = `toast glass-card border p-4 rounded-xl shadow-2xl text-sm font-semibold flex items-center justify-between gap-3 ${bgClass}`;
+        toast.innerHTML = `
+            <span>${message}</span>
+            <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white">&times;</button>
+        `;
+
+        container.appendChild(toast);
+        setTimeout(() => {
+            if (toast.parentElement) toast.remove();
+        }, 3500);
+    }
+
+    // Initialize Page
+    document.addEventListener("DOMContentLoaded", () => {
+        populateManualDropdown();
+        renderSalesTable();
+        updateShortlist();
+    });
+
+    // Populate Manual Requisition Product Dropdown
+    function populateManualDropdown() {
+        const select = document.getElementById('manual-item-select');
+        select.innerHTML = '<option value="" disabled selected>-- Choose Product --</option>';
+        items.forEach(item => {
+            select.innerHTML += `<option value="${item.id}">${item.name} (Stock: ${item.stock} Pcs)</option>`;
         });
+    }
 
-        // Toast Notification System (replaces default alert)
-        function showToast(message, type = "info") {
-            const container = document.getElementById("toast-container");
-            const toast = document.createElement("div");
-            
-            const bgClass = type === "error" ? "bg-red-600" : type === "success" ? "bg-emerald-600" : "bg-slate-800";
-            toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition-all duration-300 transform translate-y-2 opacity-0 flex items-center justify-between gap-3 min-w-[260px] pointer-events-auto`;
-            
-            toast.innerHTML = `
-                <span>${message}</span>
-                <button onclick="this.parentElement.remove()" class="text-white/80 hover:text-white">&times;</button>
+    // Tab Switcher Logic
+    function switchTab(tabId, element) {
+        document.querySelectorAll('.tab-page').forEach(page => page.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
+            btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/60');
+        });
+        
+        document.getElementById(tabId).classList.add('active');
+        element.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/60');
+        element.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
+    }
+
+    // --- 1. SALES PAGE LOGIC ---
+    function renderSalesTable() {
+        const tbody = document.getElementById("sales-table-body");
+        tbody.innerHTML = "";
+
+        items.forEach((item) => {
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-800/40 transition-colors";
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-bold text-white">${item.name}</td>
+                <td class="py-3.5 px-4 text-center font-extrabold text-blue-400">${item.stock} Pcs</td>
+                <td class="py-3.5 px-4">
+                    <input type="number" id="sell-qty-${item.id}" min="1" max="${item.stock}" 
+                           placeholder="Enter quantity" 
+                           class="w-36 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                           ${item.stock === 0 ? 'disabled' : ''}
+                           onkeydown="if(event.key === 'Enter') handleSell(${item.id})">
+                </td>
+                <td class="py-3.5 px-4 text-right">
+                    <button onclick="handleSell(${item.id})" 
+                            class="py-1.5 px-4 rounded-lg font-bold text-xs shadow-md transition-all ${
+                                item.stock === 0 
+                                ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
+                                : 'bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white shadow-blue-600/20'
+                            }" ${item.stock === 0 ? 'disabled' : ''}>
+                        Sell
+                    </button>
+                </td>
             `;
-            container.appendChild(toast);
+            tbody.appendChild(tr);
+        });
+    }
 
-            setTimeout(() => {
-                toast.classList.remove("translate-y-2", "opacity-0");
-            }, 10);
+    function handleSell(itemId) {
+        const input = document.getElementById(`sell-qty-${itemId}`);
+        const qty = parseInt(input.value);
+        const item = items.find(i => i.id === itemId);
 
-            setTimeout(() => {
-                toast.classList.add("opacity-0");
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
+        if (!qty || qty <= 0) {
+            showToast("Please enter a valid sales quantity.", "warning");
+            return;
         }
 
-        // Tab Navigation Switcher
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-page').forEach(page => page.classList.add('hidden'));
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-600', 'text-white', 'shadow-sm');
-                btn.classList.add('text-slate-600', 'hover:bg-slate-100');
-            });
-            
-            document.getElementById(tabId).classList.remove('hidden');
-            element.classList.add('bg-brand-600', 'text-white', 'shadow-sm');
-            element.classList.remove('text-slate-600', 'hover:bg-slate-100');
+        if (qty > item.stock) {
+            showToast(`Insufficient stock! Available stock is ${item.stock} Pcs.`, "danger");
+            return;
         }
 
-        function renderSalesTable() {
-            const tbody = document.getElementById("sales-table-body");
-            tbody.innerHTML = "";
+        item.stock -= qty;
+        input.value = "";
 
-            items.forEach((item) => {
-                const tr = document.createElement("tr");
-                tr.className = "hover:bg-blue-50/40 transition-colors";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-slate-900">${item.name}</td>
-                    <td class="p-4">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-                            item.stock === 0 ? 'bg-red-100 text-red-700 border border-red-200' : 
-                            (item.stock / item.initialStock) <= 0.3 ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        }">
-                            <span class="w-1.5 h-1.5 rounded-full ${item.stock === 0 ? 'bg-red-500' : (item.stock / item.initialStock) <= 0.3 ? 'bg-amber-500' : 'bg-emerald-500'}"></span>
-                            ${item.stock} Pcs
-                        </span>
-                    </td>
-                    <td class="p-4">
-                        <div class="relative max-w-[130px]">
-                            <input type="number" id="sell-qty-${item.id}" min="1" max="${item.stock}" 
-                                   placeholder="Qty" 
-                                   class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:bg-slate-100 disabled:text-slate-400 transition-all shadow-2xs font-medium"
-                                   onkeydown="if(event.key==='Enter') handleSell(${item.id})"
-                                   ${item.stock === 0 ? 'disabled' : ''}>
-                        </div>
-                    </td>
-                    <td class="p-4 text-right">
-                        <button class="px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 transform active:scale-95 ${
-                            item.stock === 0 ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200' : 'bg-brand-600 hover:bg-brand-700 text-white shadow-sm hover:shadow-brand-500/20'
-                        }" 
-                        onclick="handleSell(${item.id})" ${item.stock === 0 ? 'disabled' : ''}>
-                            Sell Item ↵
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+        showToast(`Successfully sold ${qty} Pcs of ${item.name}.`, "success");
+
+        populateManualDropdown();
+        renderSalesTable();
+        updateShortlist();
+    }
+
+    // --- 2. PURCHASE REQUISITION LOGIC ---
+    function updateShortlist() {
+        const shortlistTbody = document.getElementById("shortlist-table-body");
+        shortlistTbody.innerHTML = "";
+
+        // Auto shortlist items with stock <= 30% (<=3 pcs)
+        const shortlistedItems = items.filter(item => (item.stock / item.initialStock) <= 0.3);
+        
+        const badge = document.getElementById("shortlist-badge");
+        if (shortlistedItems.length > 0) {
+            badge.innerText = shortlistedItems.length;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
         }
 
-        function handleSell(itemId) {
-            const input = document.getElementById(`sell-qty-${itemId}`);
-            const qty = parseInt(input.value);
-            const item = items.find(i => i.id === itemId);
-
-            if (!qty || qty <= 0) {
-                showToast("Please enter a valid sale quantity.", "error");
-                return;
-            }
-
-            if (qty > item.stock) {
-                showToast(`Insufficient stock! Only ${item.stock} pcs available.`, "error");
-                return;
-            }
-
-            item.stock -= qty;
-            input.value = "";
-
-            showToast(`Successfully sold ${qty} pcs of ${item.name}.`, "success");
-            renderSalesTable();
-            updateShortlist();
+        if (shortlistedItems.length === 0) {
+            shortlistTbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-500 font-normal italic">No items currently shortlisted. Stock levels for all products are above 30%.</td></tr>`;
+            return;
         }
 
-        function updateShortlist() {
-            const shortlistTbody = document.getElementById("shortlist-table-body");
-            shortlistTbody.innerHTML = "";
+        shortlistedItems.forEach(item => {
+            const isAdded = requisitionList.some(r => r.id === item.id);
 
-            // Filter items with stock <= 30%
-            const shortlistedItems = items.filter(item => (item.stock / item.initialStock) <= 0.3);
-            
-            const badge = document.getElementById("shortlist-badge");
-            if (shortlistedItems.length > 0) {
-                badge.innerText = shortlistedItems.length;
-                badge.classList.remove("hidden");
-            } else {
-                badge.classList.add("hidden");
-            }
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-800/40 transition-colors";
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-bold text-white">${item.name}</td>
+                <td class="py-3.5 px-4 text-center font-bold text-amber-400">${item.stock} Pcs</td>
+                <td class="py-3.5 px-4 text-center text-slate-400">${item.salesLast2Months} Pcs</td>
+                <td class="py-3.5 px-4">
+                    <input type="number" id="req-qty-${item.id}" min="1" value="${item.initialStock - item.stock}" 
+                           class="w-32 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                           ${isAdded ? 'disabled' : ''}
+                           onkeydown="if(event.key === 'Enter') addToRequisition(${item.id})">
+                </td>
+                <td class="py-3.5 px-4 text-right">
+                    ${isAdded ? 
+                        `<span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">✓ Added</span>` : 
+                        `<button onclick="addToRequisition(${item.id})" class="bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold py-1.5 px-4 rounded-lg text-xs shadow-md shadow-emerald-600/20 transition-all">
+                            + Add to Requisition
+                        </button>`
+                    }
+                </td>
+            `;
+            shortlistTbody.appendChild(tr);
+        });
+    }
 
-            if (shortlistedItems.length === 0) {
-                shortlistTbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="p-8 text-center text-slate-400 italic bg-slate-50/50 rounded-b-xl">
-                            No items currently shortlisted. All inventory items are above 30% stock capacity.
-                        </td>
-                    </tr>`;
-                return;
-            }
+    // Manual Requisition Addition Function
+    function addManualToRequisition() {
+        const select = document.getElementById('manual-item-select');
+        const qtyInput = document.getElementById('manual-item-qty');
+        
+        const itemId = parseInt(select.value);
+        const qty = parseInt(qtyInput.value);
 
-            shortlistedItems.forEach(item => {
-                const isAdded = requisitionList.some(r => r.id === item.id);
-                const tr = document.createElement("tr");
-                tr.className = "hover:bg-amber-50/30 transition-colors";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-slate-900">${item.name}</td>
-                    <td class="p-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold ${item.stock === 0 ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}">
-                            ${item.stock} Pcs
-                        </span>
-                    </td>
-                    <td class="p-4 text-slate-700 font-semibold">${item.salesLast2Months} Pcs</td>
-                    <td class="p-4">
-                        <input type="number" id="req-qty-${item.id}" min="1" value="${item.initialStock - item.stock}" 
-                               class="w-28 px-3 py-1.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-slate-100 transition-all font-medium"
-                               onkeydown="if(event.key==='Enter') addToRequisition(${item.id})"
-                               ${isAdded ? 'disabled' : ''}>
-                    </td>
-                    <td class="p-4 text-right">
-                        ${isAdded ? 
-                            `<span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 inline-flex items-center gap-1">✓ Added</span>` : 
-                            `<button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow-emerald-600/20 transform active:scale-95" onclick="addToRequisition(${item.id})">+ Add ↵</button>`
-                        }
-                    </td>
-                `;
-                shortlistTbody.appendChild(tr);
-            });
+        if (!itemId) {
+            showToast("Please select a product from the dropdown list.", "warning");
+            return;
         }
 
-        function addToRequisition(itemId) {
-            const item = items.find(i => i.id === itemId);
-            const qtyInput = document.getElementById(`req-qty-${itemId}`);
-            const qty = parseInt(qtyInput.value);
+        if (!qty || qty <= 0) {
+            showToast("Please enter a valid requisition quantity.", "warning");
+            return;
+        }
 
-            if (!qty || qty <= 0) {
-                showToast("Please enter a valid requisition quantity.", "error");
-                return;
-            }
+        const item = items.find(i => i.id === itemId);
+        const existing = requisitionList.find(r => r.id === itemId);
 
+        if (existing) {
+            existing.reqQty += qty;
+            showToast(`Updated ${item.name} quantity in requisition (+${qty} Pcs).`, "success");
+        } else {
             requisitionList.push({
                 id: item.id,
                 name: item.name,
                 reqQty: qty
             });
-
-            showToast(`${item.name} added to Requisition list.`, "success");
-            updateShortlist();
-            renderRequisitionTable();
+            showToast(`Added ${qty} Pcs of ${item.name} to Requisition Queue.`, "success");
         }
 
-        function renderRequisitionTable() {
-            const tbody = document.getElementById("requisition-table-body");
-            tbody.innerHTML = "";
+        qtyInput.value = "";
+        select.value = "";
 
-            if (requisitionList.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="p-8 text-center text-slate-400 italic bg-slate-50/50 rounded-b-xl">
-                            Requisition list is empty. Add items from the shortlist above.
-                        </td>
-                    </tr>`;
-                return;
-            }
+        updateShortlist();
+        renderRequisitionTable();
+    }
 
-            requisitionList.forEach((req, index) => {
-                const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-50/80 transition-colors";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-slate-900">${req.name}</td>
-                    <td class="p-4">
-                        <input type="number" value="${req.reqQty}" min="1" 
-                               class="w-28 px-3 py-1.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium"
-                               onkeydown="if(event.key==='Enter') this.blur()"
-                               onchange="updateRequisitionQty(${index}, this.value)">
-                    </td>
-                    <td class="p-4">
-                        <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold border border-blue-200">Ready</span>
-                    </td>
-                    <td class="p-4 text-right">
-                        <button class="text-red-600 hover:text-red-800 text-xs font-bold hover:underline px-2 py-1 rounded-lg hover:bg-red-50 transition-colors" onclick="removeFromRequisition(${index})">
-                            Remove
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+    function addToRequisition(itemId) {
+        const item = items.find(i => i.id === itemId);
+        const qtyInput = document.getElementById(`req-qty-${itemId}`);
+        const qty = parseInt(qtyInput.value);
+
+        if (!qty || qty <= 0) {
+            showToast("Please enter a valid required quantity.", "warning");
+            return;
         }
 
-        function updateRequisitionQty(index, newQty) {
-            const qty = parseInt(newQty);
-            if (qty > 0) {
-                requisitionList[index].reqQty = qty;
-            }
+        requisitionList.push({
+            id: item.id,
+            name: item.name,
+            reqQty: qty
+        });
+
+        showToast(`${item.name} added to Requisition Queue.`, "success");
+        updateShortlist();
+        renderRequisitionTable();
+    }
+
+    function renderRequisitionTable() {
+        const tbody = document.getElementById("requisition-table-body");
+        tbody.innerHTML = "";
+
+        if (requisitionList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-500 font-normal italic">Requisition Queue is currently empty. Add items manually or from the Shortlist above.</td></tr>`;
+            return;
         }
 
-        function removeFromRequisition(index) {
-            requisitionList.splice(index, 1);
-            updateShortlist();
-            renderRequisitionTable();
-            showToast("Item removed from Requisition list.", "info");
+        requisitionList.forEach((req, index) => {
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-800/40 transition-colors";
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-bold text-white">${req.name}</td>
+                <td class="py-3.5 px-4">
+                    <input type="number" value="${req.reqQty}" min="1" 
+                           class="w-32 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                           onchange="updateRequisitionQty(${index}, this.value)">
+                </td>
+                <td class="py-3.5 px-4 text-center">
+                    <span class="inline-block bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-2.5 py-0.5 rounded-full font-bold">Approved</span>
+                </td>
+                <td class="py-3.5 px-4 text-right">
+                    <button onclick="removeFromRequisition(${index})" class="bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 font-bold py-1.5 px-3 rounded-lg text-xs transition-all">
+                        Remove
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function updateRequisitionQty(index, newQty) {
+        const qty = parseInt(newQty);
+        if (qty > 0) {
+            requisitionList[index].reqQty = qty;
+        }
+    }
+
+    function removeFromRequisition(index) {
+        const removed = requisitionList.splice(index, 1);
+        if (removed.length > 0) {
+            showToast(`Removed ${removed[0].name} from Requisition Queue.`, "info");
+        }
+        updateShortlist();
+        renderRequisitionTable();
+    }
+
+    function proceedToPO() {
+        if (requisitionList.length === 0) {
+            showToast("Requisition Queue is empty! Please add items first.", "warning");
+            return;
         }
 
-        function proceedToPO() {
-            if (requisitionList.length === 0) {
-                showToast("Add at least one item to Requisition before proceeding to Purchase Orders.", "error");
-                return;
-            }
+        poList = requisitionList.map(req => {
+            const history = supplierHistory[req.name] || [];
+            const defaultSupplier = history.length > 0 ? history[0].supplier : "Supplier - 1";
+            const defaultLastPrice = history.length > 0 ? history[0].lastPrice : 0;
 
-            poList = requisitionList.map(req => ({
+            return {
                 ...req,
-                selectedSupplier: "",
-                lastPrice: 0,
-                currentPrice: 0,
-                totalPrice: 0
-            }));
+                selectedSupplier: defaultSupplier,
+                lastPrice: defaultLastPrice,
+                currentPrice: defaultLastPrice,
+                totalPrice: defaultLastPrice * req.reqQty
+            };
+        });
 
-            const badge = document.getElementById("po-badge");
-            badge.innerText = poList.length;
-            badge.classList.remove("hidden");
+        const poBadge = document.getElementById("po-badge");
+        poBadge.innerText = poList.length;
+        poBadge.classList.remove("hidden");
 
-            renderPOTable();
-            switchTab('po-page', document.querySelectorAll('.nav-btn')[2]);
-            showToast("Requisitions pushed to Purchase Order workspace.", "success");
+        renderPOTable();
+        showToast("Requisitions dispatched to Purchase Order stage.", "success");
+        switchTab('po-page', document.getElementById('btn-po'));
+    }
+
+    // --- 3. PURCHASE ORDER LOGIC ---
+    function renderPOTable() {
+        const tbody = document.getElementById("po-table-body");
+        tbody.innerHTML = "";
+
+        if (poList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-500 font-normal italic">No requisition items pending Purchase Order processing.</td></tr>`;
+            return;
         }
 
-        function renderPOTable() {
-            const tbody = document.getElementById("po-table-body");
-            tbody.innerHTML = "";
-
-            if (poList.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="p-8 text-center text-slate-400 italic bg-slate-50/50 rounded-b-xl">
-                            No active requisitions waiting for Purchase Order.
-                        </td>
-                    </tr>`;
-                return;
-            }
-
-            poList.forEach((po, index) => {
-                const history = supplierHistory[po.name] || [];
-                const datalistId = `supplier-list-${index}`;
-                
-                let datalistHTML = `<datalist id="${datalistId}">`;
-                history.forEach(h => {
-                    datalistHTML += `<option value="${h.supplier}">Suggested History Supplier</option>`;
-                });
-                datalistHTML += `<option value="Supplier - 1"><option value="Supplier - 2"><option value="Supplier - 3"><option value="Supplier - 4"><option value="Supplier - 5"></datalist>`;
-
-                const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-50/80 transition-colors";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-slate-900">${po.name}</td>
-                    <td class="p-4 font-semibold text-slate-700">${po.reqQty} Pcs</td>
-                    <td class="p-4">
-                        <input type="text" list="${datalistId}" value="${po.selectedSupplier}" 
-                               placeholder="Type or select supplier..." 
-                               class="w-full max-w-xs px-3 py-1.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium"
-                               onkeydown="if(event.key==='Enter') this.blur()"
-                               oninput="onSupplierSelect(${index}, this.value)">
-                        ${datalistHTML}
-                    </td>
-                    <td class="p-4 text-slate-600 font-bold" id="last-price-${index}">৳ ${po.lastPrice}</td>
-                    <td class="p-4">
-                        <input type="number" value="${po.currentPrice || ''}" placeholder="Unit Price" 
-                               class="w-32 px-3 py-1.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium"
-                               onkeydown="if(event.key==='Enter') this.blur()"
-                               oninput="onCurrentPriceChange(${index}, this.value)">
-                    </td>
-                    <td class="p-4 text-right font-black text-slate-900 text-base">৳ <span id="total-price-${index}">${po.totalPrice}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function onSupplierSelect(index, supplierName) {
-            poList[index].selectedSupplier = supplierName;
-            const history = supplierHistory[poList[index].name] || [];
+        poList.forEach((po, index) => {
+            const history = supplierHistory[po.name] || [];
+            const datalistId = `supplier-list-${index}`;
             
-            // Match selected supplier with history for that item
-            const match = history.find(h => h.supplier.trim().toLowerCase() === supplierName.trim().toLowerCase());
+            let datalistHTML = `<datalist id="${datalistId}">`;
+            history.forEach(h => datalistHTML += `<option value="${h.supplier}">`);
+            datalistHTML += `<option value="Supplier - 1"><option value="Supplier - 2"><option value="Supplier - 3"><option value="Supplier - 4"><option value="Supplier - 5"></datalist>`;
 
-            if (match) {
-                poList[index].lastPrice = match.lastPrice;
-            } else {
-                poList[index].lastPrice = 0;
-            }
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-800/40 transition-colors";
+            tr.innerHTML = `
+                <td class="py-3.5 px-4 font-bold text-white">${po.name}</td>
+                <td class="py-3.5 px-4 text-center font-extrabold text-blue-400">${po.reqQty} Pcs</td>
+                <td class="py-3.5 px-4">
+                    <input type="text" list="${datalistId}" value="${po.selectedSupplier}" 
+                           placeholder="Type or select vendor..." 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                           oninput="onSupplierSelect(${index}, this.value)">
+                    ${datalistHTML}
+                </td>
+                <td class="py-3.5 px-4 text-center font-semibold text-slate-400">
+                    $<span id="last-price-${index}">${po.lastPrice}</span>
+                </td>
+                <td class="py-3.5 px-4">
+                    <input type="number" value="${po.currentPrice || ''}" placeholder="Unit Price" 
+                           class="w-32 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                           oninput="onCurrentPriceChange(${index}, this.value)">
+                </td>
+                <td class="py-3.5 px-4 text-right font-extrabold text-emerald-400">
+                    $<span id="total-price-${index}">${po.totalPrice.toLocaleString()}</span>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 
-            document.getElementById(`last-price-${index}`).innerText = `৳ ${poList[index].lastPrice}`;
+    function onSupplierSelect(index, supplierName) {
+        poList[index].selectedSupplier = supplierName;
+        const itemName = poList[index].name;
+
+        const history = supplierHistory[itemName] || [];
+        const match = history.find(h => h.supplier.trim().toLowerCase() === supplierName.trim().toLowerCase());
+
+        if (match) {
+            poList[index].lastPrice = match.lastPrice;
+        } else {
+            poList[index].lastPrice = 0;
         }
 
-        function onCurrentPriceChange(index, priceValue) {
-            const price = parseFloat(priceValue) || 0;
-            poList[index].currentPrice = price;
-            poList[index].totalPrice = price * poList[index].reqQty;
+        document.getElementById(`last-price-${index}`).innerText = poList[index].lastPrice;
+    }
 
-            document.getElementById(`total-price-${index}`).innerText = poList[index].totalPrice.toLocaleString('en-US');
+    function onCurrentPriceChange(index, priceValue) {
+        const price = parseFloat(priceValue) || 0;
+        poList[index].currentPrice = price;
+        poList[index].totalPrice = price * poList[index].reqQty;
+
+        document.getElementById(`total-price-${index}`).innerText = poList[index].totalPrice.toLocaleString();
+    }
+
+    function generateGroupedPO() {
+        if (poList.length === 0) {
+            showToast("No active items in Purchase Order queue.", "warning");
+            return;
         }
 
-        function generateGroupedPO() {
-            if (poList.length === 0) {
-                showToast("No items available to generate purchase order.", "error");
+        for (let item of poList) {
+            if (!item.selectedSupplier.trim()) {
+                showToast(`Please select or type a vendor for ${item.name}.`, "danger");
                 return;
             }
-
-            // Input Validation
-            for (let item of poList) {
-                if (!item.selectedSupplier.trim()) {
-                    showToast(`Please select or enter a supplier for ${item.name}.`, "error");
-                    return;
-                }
-                if (!item.currentPrice || item.currentPrice <= 0) {
-                    showToast(`Please enter a valid current unit price for ${item.name}.`, "error");
-                    return;
-                }
+            if (!item.currentPrice || item.currentPrice <= 0) {
+                showToast(`Please enter a valid purchase price for ${item.name}.`, "danger");
+                return;
             }
+        }
 
-            const container = document.getElementById("grouped-po-container");
-            container.innerHTML = "";
+        const container = document.getElementById("grouped-po-container");
+        container.innerHTML = "";
 
-            // Grouping by Supplier
-            const grouped = {};
-            poList.forEach(po => {
-                const sName = po.selectedSupplier.trim();
-                if (!grouped[sName]) grouped[sName] = [];
-                grouped[sName].push(po);
+        const grouped = {};
+        poList.forEach(po => {
+            const key = po.selectedSupplier.trim();
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(po);
+        });
+
+        let grandTotal = 0;
+
+        for (let supplier in grouped) {
+            let supplierTotal = 0;
+            const itemsGroup = grouped[supplier];
+
+            let rowsHTML = "";
+            itemsGroup.forEach(item => {
+                supplierTotal += item.totalPrice;
+                rowsHTML += `
+                    <tr class="hover:bg-slate-800/40 transition-colors border-b border-slate-800/60">
+                        <td class="py-3 px-4 font-bold text-white">${item.name}</td>
+                        <td class="py-3 px-4 text-center text-slate-300 font-semibold">${item.reqQty} Pcs</td>
+                        <td class="py-3 px-4 text-center text-slate-300">$${item.currentPrice.toLocaleString()}</td>
+                        <td class="py-3 px-4 text-right font-extrabold text-emerald-400">$${item.totalPrice.toLocaleString()}</td>
+                    </tr>
+                `;
             });
 
-            let grandTotal = 0;
+            grandTotal += supplierTotal;
 
-            for (let supplier in grouped) {
-                let supplierTotal = 0;
-                let rowsHTML = "";
-
-                grouped[supplier].forEach(item => {
-                    supplierTotal += item.totalPrice;
-                    rowsHTML += `
-                        <tr class="border-b border-slate-100">
-                            <td class="p-3 font-medium text-slate-800">${item.name}</td>
-                            <td class="p-3 text-slate-600">${item.reqQty} Pcs</td>
-                            <td class="p-3 text-slate-600">৳ ${item.currentPrice}</td>
-                            <td class="p-3 text-right font-semibold text-slate-900">৳ ${item.totalPrice.toLocaleString('en-US')}</td>
-                        </tr>
-                    `;
-                });
-
-                grandTotal += supplierTotal;
-
-                const groupCard = document.createElement("div");
-                groupCard.className = "border border-slate-200 rounded-xl overflow-hidden shadow-xs";
-                groupCard.innerHTML = `
-                    <div class="bg-slate-100 px-4 py-3 font-bold text-slate-800 flex justify-between items-center border-b border-slate-200">
-                        <span class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            Supplier: ${supplier}
-                        </span>
-                        <span class="text-sm font-semibold text-brand-800">Subtotal: ৳ ${supplierTotal.toLocaleString('en-US')}</span>
+            const groupCard = document.createElement("div");
+            groupCard.className = "bg-slate-900/80 border border-slate-700/80 rounded-xl overflow-hidden shadow-lg";
+            groupCard.innerHTML = `
+                <div class="bg-slate-800/90 px-5 py-3.5 border-b border-slate-700 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                        <span class="font-extrabold text-white">Vendor: ${supplier}</span>
                     </div>
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
+                    <span class="text-sm font-bold text-emerald-400">Subtotal: $${supplierTotal.toLocaleString()}</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-950/50 text-xs uppercase text-slate-400">
                             <tr>
-                                <th class="p-3">Item</th>
-                                <th class="p-3">Qty</th>
-                                <th class="p-3">Unit Price</th>
-                                <th class="p-3 text-right">Total Price</th>
+                                <th class="py-2.5 px-4">Item Name</th>
+                                <th class="py-2.5 px-4 text-center">Order Qty</th>
+                                <th class="py-2.5 px-4 text-center">Unit Price</th>
+                                <th class="py-2.5 px-4 text-right">Total Amount</th>
                             </tr>
                         </thead>
                         <tbody>${rowsHTML}</tbody>
                     </table>
-                `;
-                container.appendChild(groupCard);
-            }
-
-            const grandTotalBox = document.createElement("div");
-            grandTotalBox.className = "p-4 bg-blue-50 border border-blue-200 rounded-xl text-right font-extrabold text-brand-900 text-lg flex justify-between items-center";
-            grandTotalBox.innerHTML = `
-                <span class="text-xs uppercase tracking-wider font-bold text-blue-700">All Suppliers Combined</span>
-                <span>Grand Total: ৳ ${grandTotal.toLocaleString('en-US')}</span>
+                </div>
             `;
-            container.appendChild(grandTotalBox);
-
-            document.getElementById("grouped-po-section").classList.remove("hidden");
-            document.getElementById("grouped-po-section").scrollIntoView({ behavior: 'smooth' });
-            showToast("Supplier Purchase Orders generated successfully!", "success");
+            container.appendChild(groupCard);
         }
-    </script>
+
+        const grandTotalBox = document.createElement("div");
+        grandTotalBox.className = "glass-card p-5 rounded-xl border border-blue-500/30 flex items-center justify-between text-lg font-extrabold text-white";
+        grandTotalBox.innerHTML = `
+            <span class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Grand Purchase Total
+            </span>
+            <span class="text-2xl text-emerald-400">$${grandTotal.toLocaleString()}</span>
+        `;
+        container.appendChild(grandTotalBox);
+
+        const section = document.getElementById("grouped-po-section");
+        section.classList.remove("hidden");
+        section.scrollIntoView({ behavior: 'smooth' });
+
+        showToast("Supplier Purchase Orders generated successfully!", "success");
+    }
+</script>
 </body>
      <script>
   // Right-click 
