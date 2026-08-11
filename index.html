@@ -33,7 +33,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Custom Scrollbar */
+        /* স্ক্রোলবার স্টাইলিং */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -49,7 +49,7 @@
             background: #475569;
         }
 
-        /* Toast notification styling */
+        /* টোস্ট নোটিফিকেশন স্টাইলিং */
         #toast-container {
             position: fixed;
             bottom: 24px;
@@ -77,7 +77,7 @@
 
 <div class="max-w-7xl mx-auto space-y-6">
 
-    <!-- Header Banner -->
+    <!-- হেডার ব্যানার -->
     <header class="glass-card rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <div class="absolute -right-12 -top-12 w-60 h-60 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
@@ -102,7 +102,7 @@
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
+    <!-- নেভিগেশন ট্যাব -->
     <nav class="glass-card p-2 rounded-xl flex gap-2 overflow-x-auto shadow-lg">
         <button id="btn-sales" onclick="switchTab('sales-page', this)" class="nav-btn flex-1 min-w-[140px] py-3 px-5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-blue-600 text-white shadow-md shadow-blue-600/30">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
@@ -120,7 +120,7 @@
         </button>
     </nav>
 
-    <!-- TAB 1: SALES TERMINAL -->
+    <!-- ট্যাব ১: সেলস টার্মিনাল -->
     <main id="sales-page" class="tab-page active">
         <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex items-center justify-between pb-4 border-b border-slate-700/60">
@@ -143,39 +143,43 @@
                         </tr>
                     </thead>
                     <tbody id="sales-table-body" class="divide-y divide-slate-800/60 font-medium">
-                        <!-- Dynamic Rows -->
+                        <!-- ডাইনামিক রো -->
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
 
-    <!-- TAB 2: PURCHASE REQUISITION -->
+    <!-- ট্যাব ২: পারচেজ রিকুইজিশন -->
     <main id="requisition-page" class="tab-page space-y-6">
 
-        <!-- NEW: Manual Item Requisition Entry Section -->
+        <!-- ম্যানুয়াল রিকুইজিশন ইনপুট সেকশন -->
         <div class="glass-card rounded-2xl p-6 shadow-xl border-l-4 border-blue-500">
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <h2 class="text-lg font-bold text-white flex items-center gap-2">
                         <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Manual Requisition Entry
+                        Manual Requisition Entry (Search or Add New Item)
                     </h2>
-                    <p class="text-xs text-slate-400">Add any product manually to the Requisition List even if it is not currently shortlisted.</p>
+                    <p class="text-xs text-slate-400">Search existing inventory items or type a new product name to register and add to requisition.</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                 <div class="md:col-span-6">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Select Product</label>
-                    <select id="manual-item-select" class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
-                        <!-- Dynamic Options -->
-                    </select>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Product Name / Search</label>
+                    <input type="text" id="manual-item-input" list="manual-items-list" 
+                           placeholder="Type product name (e.g. Item - 1 or New Spare Parts)..." 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+                           onkeydown="if(event.key === 'Enter') document.getElementById('manual-item-qty').focus()">
+                    <datalist id="manual-items-list">
+                        <!-- ডাইনামিক অপশন -->
+                    </datalist>
                 </div>
                 <div class="md:col-span-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Quantity</label>
                     <input type="number" id="manual-item-qty" min="1" placeholder="Enter Qty" 
-                           class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+                           class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
                            onkeydown="if(event.key === 'Enter') addManualToRequisition()">
                 </div>
                 <div class="md:col-span-3">
@@ -187,7 +191,7 @@
             </div>
         </div>
 
-        <!-- Section 1: Auto Shortlist -->
+        <!-- সেকশন ১: অটো শর্টলিস্ট -->
         <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex items-center justify-between pb-4 border-b border-slate-700/60">
                 <div>
@@ -210,13 +214,13 @@
                         </tr>
                     </thead>
                     <tbody id="shortlist-table-body" class="divide-y divide-slate-800/60 font-medium">
-                        <!-- Dynamic Rows -->
+                        <!-- ডাইনামিক রো -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Section 2: Final Requisition List -->
+        <!-- সেকশন ২: ফাইনাল রিকুইজিশন লিস্ট -->
         <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-700/60">
                 <div>
@@ -242,14 +246,14 @@
                         </tr>
                     </thead>
                     <tbody id="requisition-table-body" class="divide-y divide-slate-800/60 font-medium">
-                        <!-- Dynamic Rows -->
+                        <!-- ডাইনামিক রো -->
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
 
-    <!-- TAB 3: PURCHASE ORDER -->
+    <!-- ট্যাব ৩: পারচেজ অর্ডার -->
     <main id="po-page" class="tab-page space-y-6">
         <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-700/60">
@@ -271,20 +275,20 @@
                         <tr>
                             <th class="py-3.5 px-4 rounded-l-lg">Item Name</th>
                             <th class="py-3.5 px-4 text-center">Order Qty</th>
-                            <th class="py-3.5 px-4">Vendor Selection</th>
+                            <th class="py-3.5 px-4 min-w-[260px]">Supplier Selection</th>
                             <th class="py-3.5 px-4 text-center">Last Purchase Price</th>
-                            <th class="py-3.5 px-4">New Purchase Price ($)</th>
-                            <th class="py-3.5 px-4 text-right rounded-r-lg">Subtotal ($)</th>
+                            <th class="py-3.5 px-4">New Purchase Price (Tk)</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-lg">Subtotal (Tk)</th>
                         </tr>
                     </thead>
                     <tbody id="po-table-body" class="divide-y divide-slate-800/60 font-medium">
-                        <!-- Dynamic Rows -->
+                        <!-- ডাইনামিক রো -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Supplier-Wise Final Output View -->
+        <!-- সাপ্লায়ার অনুযায়ী চূড়ান্ত রিপোর্ট ভিউ -->
         <div id="grouped-po-section" class="glass-card rounded-2xl p-6 shadow-2xl space-y-6 hidden border-t-4 border-emerald-500">
             <div class="border-b border-slate-700/60 pb-4 flex items-center justify-between">
                 <div>
@@ -296,7 +300,7 @@
             </div>
 
             <div id="grouped-po-container" class="space-y-6">
-                <!-- Dynamic Grouped PO Tables -->
+                <!-- ডাইনামিক টেবিল -->
             </div>
         </div>
     </main>
@@ -304,7 +308,7 @@
 </div>
 
 <script>
-    // Master Inventory State (Items 1 to 10 starting at 10 pcs)
+    // মাস্টার ইনভেন্টরি স্টেট (১০টি আইটেম)
     const initialItems = [
         { id: 1, name: "Item - 1", stock: 10, initialStock: 10, salesLast2Months: 15 },
         { id: 2, name: "Item - 2", stock: 10, initialStock: 10, salesLast2Months: 8 },
@@ -318,7 +322,7 @@
         { id: 10, name: "Item - 10", stock: 10, initialStock: 10, salesLast2Months: 7 }
     ];
 
-    // Supplier mappings with preset purchase history & prices
+    // প্রদত্ত তথ্য অনুযায়ী সাপ্লায়ার ম্যাপিং এবং লাস্ট পারচেজ প্রাইস
     const supplierHistory = {
         "Item - 1": [
             { supplier: "Supplier - 1", lastPrice: 120 },
@@ -355,11 +359,14 @@
         ]
     };
 
+    // গ্লোবাল মাস্টার সাপ্লায়ার লিস্ট
+    let allSuppliersList = ["Supplier - 1", "Supplier - 2", "Supplier - 3", "Supplier - 4", "Supplier - 5"];
+
     let items = JSON.parse(JSON.stringify(initialItems));
     let requisitionList = [];
     let poList = [];
 
-    // Toast Notification Utility
+    // নোটিফিকেশন ফাংশন
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -381,23 +388,21 @@
         }, 3500);
     }
 
-    // Initialize Page
+    // অনলোড ইনিশিয়ালাইজেশন
     document.addEventListener("DOMContentLoaded", () => {
-        populateManualDropdown();
+        populateManualDatalist();
         renderSalesTable();
         updateShortlist();
     });
 
-    // Populate Manual Requisition Product Dropdown
-    function populateManualDropdown() {
-        const select = document.getElementById('manual-item-select');
-        select.innerHTML = '<option value="" disabled selected>-- Choose Product --</option>';
+    function populateManualDatalist() {
+        const datalist = document.getElementById('manual-items-list');
+        datalist.innerHTML = '';
         items.forEach(item => {
-            select.innerHTML += `<option value="${item.id}">${item.name} (Stock: ${item.stock} Pcs)</option>`;
+            datalist.innerHTML += `<option value="${item.name}">Current Stock: ${item.stock} Pcs</option>`;
         });
     }
 
-    // Tab Switcher Logic
     function switchTab(tabId, element) {
         document.querySelectorAll('.tab-page').forEach(page => page.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -410,7 +415,7 @@
         element.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
     }
 
-    // --- 1. SALES PAGE LOGIC ---
+    // --- ১. সেলস পেজ লজিক ---
     function renderSalesTable() {
         const tbody = document.getElementById("sales-table-body");
         tbody.innerHTML = "";
@@ -463,17 +468,16 @@
 
         showToast(`Successfully sold ${qty} Pcs of ${item.name}.`, "success");
 
-        populateManualDropdown();
+        populateManualDatalist();
         renderSalesTable();
         updateShortlist();
     }
 
-    // --- 2. PURCHASE REQUISITION LOGIC ---
+    // --- ২. পারচেজ রিকুইজিশন লজিক ---
     function updateShortlist() {
         const shortlistTbody = document.getElementById("shortlist-table-body");
         shortlistTbody.innerHTML = "";
 
-        // Auto shortlist items with stock <= 30% (<=3 pcs)
         const shortlistedItems = items.filter(item => (item.stock / item.initialStock) <= 0.3);
         
         const badge = document.getElementById("shortlist-badge");
@@ -517,16 +521,15 @@
         });
     }
 
-    // Manual Requisition Addition Function
     function addManualToRequisition() {
-        const select = document.getElementById('manual-item-select');
+        const inputField = document.getElementById('manual-item-input');
         const qtyInput = document.getElementById('manual-item-qty');
         
-        const itemId = parseInt(select.value);
+        const inputName = inputField.value.trim();
         const qty = parseInt(qtyInput.value);
 
-        if (!itemId) {
-            showToast("Please select a product from the dropdown list.", "warning");
+        if (!inputName) {
+            showToast("Please enter or select a product name.", "warning");
             return;
         }
 
@@ -535,8 +538,24 @@
             return;
         }
 
-        const item = items.find(i => i.id === itemId);
-        const existing = requisitionList.find(r => r.id === itemId);
+        let item = items.find(i => i.name.toLowerCase() === inputName.toLowerCase());
+
+        if (!item) {
+            const newId = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
+            item = {
+                id: newId,
+                name: inputName,
+                stock: 0,
+                initialStock: 10,
+                salesLast2Months: 0
+            };
+            items.push(item);
+            populateManualDatalist();
+            renderSalesTable();
+            showToast(`Registered new product '${inputName}' into inventory.`, "info");
+        }
+
+        const existing = requisitionList.find(r => r.id === item.id);
 
         if (existing) {
             existing.reqQty += qty;
@@ -550,8 +569,8 @@
             showToast(`Added ${qty} Pcs of ${item.name} to Requisition Queue.`, "success");
         }
 
+        inputField.value = "";
         qtyInput.value = "";
-        select.value = "";
 
         updateShortlist();
         renderRequisitionTable();
@@ -640,6 +659,8 @@
             return {
                 ...req,
                 selectedSupplier: defaultSupplier,
+                isCustomSupplier: false,
+                customSupplierName: "",
                 lastPrice: defaultLastPrice,
                 currentPrice: defaultLastPrice,
                 totalPrice: defaultLastPrice * req.reqQty
@@ -655,7 +676,7 @@
         switchTab('po-page', document.getElementById('btn-po'));
     }
 
-    // --- 3. PURCHASE ORDER LOGIC ---
+    // --- ৩. পারচেজ অর্ডার লজিক ---
     function renderPOTable() {
         const tbody = document.getElementById("po-table-body");
         tbody.innerHTML = "";
@@ -667,11 +688,28 @@
 
         poList.forEach((po, index) => {
             const history = supplierHistory[po.name] || [];
-            const datalistId = `supplier-list-${index}`;
             
-            let datalistHTML = `<datalist id="${datalistId}">`;
-            history.forEach(h => datalistHTML += `<option value="${h.supplier}">`);
-            datalistHTML += `<option value="Supplier - 1"><option value="Supplier - 2"><option value="Supplier - 3"><option value="Supplier - 4"><option value="Supplier - 5"></datalist>`;
+            // পূর্বে কেনা সাপ্লায়ার সাজেস্ট করা
+            let selectOptionsHTML = `<option value="" disabled>-- Select Suggested Supplier --</option>`;
+            
+            if (history.length > 0) {
+                history.forEach(h => {
+                    const selectedAttr = (po.selectedSupplier === h.supplier && !po.isCustomSupplier) ? "selected" : "";
+                    selectOptionsHTML += `<option value="${h.supplier}" ${selectedAttr}>⭐ ${h.supplier} (Last: Tk ${h.lastPrice})</option>`;
+                });
+            }
+
+            // অন্যান্য সাধারণ সাপ্লায়ার যুক্ত করা
+            allSuppliersList.forEach(sup => {
+                if (!history.some(h => h.supplier === sup)) {
+                    const selectedAttr = (po.selectedSupplier === sup && !po.isCustomSupplier) ? "selected" : "";
+                    selectOptionsHTML += `<option value="${sup}" ${selectedAttr}>${sup}</option>`;
+                }
+            });
+
+            // কাস্টম বা নতুন নাম টাইপ করার অপশন
+            const customOptionSelected = po.isCustomSupplier ? "selected" : "";
+            selectOptionsHTML += `<option value="__NEW_CUSTOM__" ${customOptionSelected}>✏️ Type New / Custom Supplier...</option>`;
 
             const tr = document.createElement("tr");
             tr.className = "hover:bg-slate-800/40 transition-colors";
@@ -679,42 +717,78 @@
                 <td class="py-3.5 px-4 font-bold text-white">${po.name}</td>
                 <td class="py-3.5 px-4 text-center font-extrabold text-blue-400">${po.reqQty} Pcs</td>
                 <td class="py-3.5 px-4">
-                    <input type="text" list="${datalistId}" value="${po.selectedSupplier}" 
-                           placeholder="Type or select vendor..." 
-                           class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
-                           oninput="onSupplierSelect(${index}, this.value)">
-                    ${datalistHTML}
+                    <select id="supplier-select-${index}" 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                            onchange="onSupplierDropdownChange(${index}, this.value)">
+                        ${selectOptionsHTML}
+                    </select>
+                    <input type="text" id="custom-supplier-input-${index}" 
+                           value="${po.customSupplierName || ''}" 
+                           placeholder="Type new supplier name..." 
+                           class="${po.isCustomSupplier ? 'block' : 'hidden'} w-full mt-2 bg-slate-900 border border-blue-500/80 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none transition-colors"
+                           oninput="onCustomSupplierType(${index}, this.value)">
                 </td>
                 <td class="py-3.5 px-4 text-center font-semibold text-slate-400">
-                    $<span id="last-price-${index}">${po.lastPrice}</span>
+                    Tk <span id="last-price-${index}">${po.lastPrice}</span>
                 </td>
                 <td class="py-3.5 px-4">
-                    <input type="number" value="${po.currentPrice || ''}" placeholder="Unit Price" 
+                    <input type="number" id="current-price-${index}" value="${po.currentPrice || ''}" placeholder="Unit Price" 
                            class="w-32 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
                            oninput="onCurrentPriceChange(${index}, this.value)">
                 </td>
                 <td class="py-3.5 px-4 text-right font-extrabold text-emerald-400">
-                    $<span id="total-price-${index}">${po.totalPrice.toLocaleString()}</span>
+                    Tk <span id="total-price-${index}">${po.totalPrice.toLocaleString()}</span>
                 </td>
             `;
             tbody.appendChild(tr);
         });
     }
 
-    function onSupplierSelect(index, supplierName) {
-        poList[index].selectedSupplier = supplierName;
-        const itemName = poList[index].name;
+    function onSupplierDropdownChange(index, selectedValue) {
+        const customInput = document.getElementById(`custom-supplier-input-${index}`);
 
-        const history = supplierHistory[itemName] || [];
-        const match = history.find(h => h.supplier.trim().toLowerCase() === supplierName.trim().toLowerCase());
-
-        if (match) {
-            poList[index].lastPrice = match.lastPrice;
-        } else {
+        if (selectedValue === "__NEW_CUSTOM__") {
+            poList[index].isCustomSupplier = true;
+            poList[index].selectedSupplier = poList[index].customSupplierName || "";
             poList[index].lastPrice = 0;
+            if (customInput) customInput.classList.remove("hidden");
+        } else {
+            poList[index].isCustomSupplier = false;
+            poList[index].selectedSupplier = selectedValue;
+            if (customInput) customInput.classList.add("hidden");
+
+            // নতুন সাপ্লায়ার না হলে লিস্টে আছে কিনা চেক করা
+            if (selectedValue && !allSuppliersList.includes(selectedValue)) {
+                allSuppliersList.push(selectedValue);
+            }
+
+            // পূর্বে কত দামে কেনা হয়েছিল (Last Price) অটো লোড
+            const history = supplierHistory[poList[index].name] || [];
+            const match = history.find(h => h.supplier === selectedValue);
+
+            if (match) {
+                poList[index].lastPrice = match.lastPrice;
+                poList[index].currentPrice = match.lastPrice;
+                poList[index].totalPrice = match.lastPrice * poList[index].reqQty;
+            } else {
+                poList[index].lastPrice = 0;
+            }
         }
 
-        document.getElementById(`last-price-${index}`).innerText = poList[index].lastPrice;
+        // ইনপুট ফিল্ড ও ডিসপ্লে আপডেট
+        const priceInput = document.getElementById(`current-price-${index}`);
+        if (priceInput) priceInput.value = poList[index].currentPrice || '';
+
+        const lastPriceEl = document.getElementById(`last-price-${index}`);
+        if (lastPriceEl) lastPriceEl.innerText = poList[index].lastPrice;
+
+        const totalPriceEl = document.getElementById(`total-price-${index}`);
+        if (totalPriceEl) totalPriceEl.innerText = poList[index].totalPrice.toLocaleString();
+    }
+
+    function onCustomSupplierType(index, value) {
+        poList[index].customSupplierName = value;
+        poList[index].selectedSupplier = value;
     }
 
     function onCurrentPriceChange(index, priceValue) {
@@ -722,7 +796,8 @@
         poList[index].currentPrice = price;
         poList[index].totalPrice = price * poList[index].reqQty;
 
-        document.getElementById(`total-price-${index}`).innerText = poList[index].totalPrice.toLocaleString();
+        const totalPriceEl = document.getElementById(`total-price-${index}`);
+        if (totalPriceEl) totalPriceEl.innerText = poList[index].totalPrice.toLocaleString();
     }
 
     function generateGroupedPO() {
@@ -732,7 +807,8 @@
         }
 
         for (let item of poList) {
-            if (!item.selectedSupplier.trim()) {
+            const finalSupplierName = item.isCustomSupplier ? item.customSupplierName.trim() : item.selectedSupplier.trim();
+            if (!finalSupplierName) {
                 showToast(`Please select or type a vendor for ${item.name}.`, "danger");
                 return;
             }
@@ -747,7 +823,7 @@
 
         const grouped = {};
         poList.forEach(po => {
-            const key = po.selectedSupplier.trim();
+            const key = po.isCustomSupplier ? po.customSupplierName.trim() : po.selectedSupplier.trim();
             if (!grouped[key]) grouped[key] = [];
             grouped[key].push(po);
         });
@@ -765,8 +841,8 @@
                     <tr class="hover:bg-slate-800/40 transition-colors border-b border-slate-800/60">
                         <td class="py-3 px-4 font-bold text-white">${item.name}</td>
                         <td class="py-3 px-4 text-center text-slate-300 font-semibold">${item.reqQty} Pcs</td>
-                        <td class="py-3 px-4 text-center text-slate-300">$${item.currentPrice.toLocaleString()}</td>
-                        <td class="py-3 px-4 text-right font-extrabold text-emerald-400">$${item.totalPrice.toLocaleString()}</td>
+                        <td class="py-3 px-4 text-center text-slate-300">Tk ${item.currentPrice.toLocaleString()}</td>
+                        <td class="py-3 px-4 text-right font-extrabold text-emerald-400">Tk ${item.totalPrice.toLocaleString()}</td>
                     </tr>
                 `;
             });
@@ -781,7 +857,7 @@
                         <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                         <span class="font-extrabold text-white">Vendor: ${supplier}</span>
                     </div>
-                    <span class="text-sm font-bold text-emerald-400">Subtotal: $${supplierTotal.toLocaleString()}</span>
+                    <span class="text-sm font-bold text-emerald-400">Subtotal: Tk ${supplierTotal.toLocaleString()}</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-300">
@@ -807,7 +883,7 @@
                 <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Grand Purchase Total
             </span>
-            <span class="text-2xl text-emerald-400">$${grandTotal.toLocaleString()}</span>
+            <span class="text-2xl text-emerald-400">Tk ${grandTotal.toLocaleString()}</span>
         `;
         container.appendChild(grandTotalBox);
 
@@ -819,7 +895,7 @@
     }
 </script>
 </body>
-     <script>
+ <script>
   // Right-click 
   document.addEventListener('contextmenu', event => event.preventDefault());
 
