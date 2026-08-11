@@ -478,7 +478,10 @@
         const shortlistTbody = document.getElementById("shortlist-table-body");
         shortlistTbody.innerHTML = "";
 
-        const shortlistedItems = items.filter(item => (item.stock / item.initialStock) <= 0.3);
+        // Auto shortlist items with stock <= 30% (<=3 pcs), sorted ascending by stock (0 -> 1 -> 2 -> 3)
+        const shortlistedItems = items
+            .filter(item => (item.stock / item.initialStock) <= 0.3)
+            .sort((a, b) => a.stock - b.stock);
         
         const badge = document.getElementById("shortlist-badge");
         if (shortlistedItems.length > 0) {
@@ -894,8 +897,8 @@
         showToast("Supplier Purchase Orders generated successfully!", "success");
     }
 </script>
-</body>
- <script>
+
+<script>
   // Right-click 
   document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -910,4 +913,5 @@
     }
   };
 </script>
+</body>
 </html>
